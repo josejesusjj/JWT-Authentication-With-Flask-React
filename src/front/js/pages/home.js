@@ -12,6 +12,11 @@ export const Home = () => {
 			<p>
 				<img src={rigoImageUrl} />
 			</p>
+			<input type="email" name="" id="" />
+			<input type="password" name="" id="" />
+			<button />
+		
+
 			<div className="alert alert-info">
 				{store.message || "Loading message from the backend (make sure your python backend is running)..."}
 			</div>
