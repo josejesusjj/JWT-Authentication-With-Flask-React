@@ -7,7 +7,7 @@ from api.utils import generate_sitemap, APIException
 from flask_jwt_extended import jwt_required, create_access_token
 
 api = Blueprint('api', __name__)
-
+#api 1 - login, here i create the login service
 @api.route('/login', methods=['POST'])
 def login():
     email = request.json.get('email') #here I take the data from the api
@@ -28,8 +28,29 @@ def login():
     return jsonify(data_response), 200 # here I send de data stored in the dictionary as a response
 
 # this way we are sure the data is coming from the api and is the right data
+# end of api 1 - login
 
+# api 2 - signup, here i create the signup service, for now is just a copy of api 1.
+@api.route('/signup', methods=['POST'])
+def signup():
+    email = request.json.get('email') #here I take the data from the api
+    password = request.json.get('password') 
 
+    user = User.query.filter_by(email=email, password=password).first()
+    if not user:
+        return jsonify({"message":"El usuario o contraseña incorrectos"}), 401
+
+    data_response = { #here I create a dictionary and I put de data from the API
+        "token" : token,
+        "email": user.email,
+        "user_id": user.id
+    }
+
+    return jsonify(data_response), 200 # here I send de data stored in the dictionary as a response
+
+# end of api 2 - singup
+
+# api test - hello: this is and api for testings
 @api.route('/hello', methods=['POST', 'GET'])
 @jwt_required()
 def handle_hello():
@@ -39,3 +60,4 @@ def handle_hello():
     }
 
     return jsonify(response_body), 200
+# end of api test - hello

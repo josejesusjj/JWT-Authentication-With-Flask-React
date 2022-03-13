@@ -7,6 +7,10 @@ class User(db.Model):
     email = db.Column(db.String(120), unique=True, nullable=False)
     password = db.Column(db.String(80), unique=False, nullable=False)
     is_active = db.Column(db.Boolean(), unique=False, nullable=False)
+    #user_name = db.Column(db.String(80), unique=False, nullable=True)
+    #first_name = db.Column(db.String(80), unique=False, nullable=False)
+    #last_name = db.Column(db.String(80), unique=False, nullable=False)
+    #birth_date = db.Column(db.String(80), unique=False, nullable=False) #db.DateField (?)
 
     def __repr__(self):
         return '<User %r>' % self.email
@@ -15,5 +19,6 @@ class User(db.Model):
         return {
             "id": self.id,
             "email": self.email,
+            
             # do not serialize the password, its a security breach
         }
