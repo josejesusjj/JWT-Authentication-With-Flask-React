@@ -10,7 +10,8 @@ api = Blueprint('api', __name__)
 #api 1 - login, here i create the login service
 @api.route('/login', methods=['POST'])
 def login():
-    email = request.json.get('email') #here I take the data from the api
+    #here I take the data from the api for login
+    email = request.json.get('email') 
     password = request.json.get('password') 
 
     user = User.query.filter_by(email=email, password=password).first()
