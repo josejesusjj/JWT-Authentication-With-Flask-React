@@ -41,7 +41,58 @@ const getState = ({ getStore, getActions, setStore }) => {
 
 				//reset the global store
 				setStore({ demo: demo });
-			}
+			},
+
+			syncTokenSessionStore: () => {
+				const token = sessionStorage.getItem("token");
+				console.log("token stored");
+				if (token && token != "" && token != undefined)
+				  setStore({ token: token });
+			  },
+		
+			  logout: () => {
+				sessionStorage.removeItem("token");
+				sessionStorage.removeItem("email");
+				sessionStorage.removeItem("id");
+				console.log("log out");
+				setStore({ token: null });
+				setStore({ email: null });
+				setStore({ id: null });
+			  },
+
+			  login: async (email, password) => {
+				try {
+				  if (email === "" || password === "") {
+					setMissingField("Please enter all the fields");
+				  } else {
+					const response = await fetch(
+					  process.env.BACKEND_URL + "/api/login",
+					  {
+						method: "POST",
+						headers: { "Content-Type": "application/json" },
+						body: JSON.stringify({ email: email, password: password }),
+					  }
+					);
+		
+					if (response.status != 200) {
+					  alert("invalid user or password");
+					  return false;
+					}
+					const responseFromApi = await response.json(); //puedo cambiar la alerta por una funcion que suelte un html y así homogeneizar las alertas
+					console.log("response from API", responseFromApi);
+					sessionStorage.setItem("token", responseFromApi.token);
+					sessionStorage.setItem("email", responseFromApi.email); //con esto podemos recuperar el email y el nombre directamente en el front sin tener que hacer llamada
+					sessionStorage.setItem("id", responseFromApi.id);
+					setStore({
+					  token: responseFromApi.token,
+					  email: responseFromApi.email,
+					});
+				  }
+				} catch (error) {
+				  console.log("There is an error in login process");
+				}
+			  },
+		
 		}
 	};
 };

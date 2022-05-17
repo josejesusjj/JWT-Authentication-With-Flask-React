@@ -36,18 +36,13 @@ def login():
 def signup():
     email = request.json.get('email') #here I take the data from the api
     password = request.json.get('password') 
-
-    user = User.query.filter_by(email=email, password=password).first()
-    if not user:
-        return jsonify({"message":"El usuario o contraseña incorrectos"}), 401
-
-    data_response = { #here I create a dictionary and I put de data from the API
-        "token" : token,
-        "email": user.email,
-        "user_id": user.id
-    }
-
-    return jsonify(data_response), 200 # here I send de data stored in the dictionary as a response
+    already_used = User.query.filter_by(email=email).first()
+    if already_used: 
+        return jsonify({"message": "El email ya está utilizado"}), 401
+    user = User(email=email, password=password, is_active=True)
+    db.session.add(user)
+    db.session.commit()
+    return jsonify({'response': "Usuario creado con éxito"}), 200
 
 # end of api 2 - singup
 
